@@ -23405,6 +23405,7 @@ module.exports = require('./lib/React');
 var Dispatcher = require('../dispatcher');
 var ActionTypes  = require('../constants/actionTypes');
 
+//Automatically generate Actions according to ActionTypes
 Object.keys(ActionTypes).forEach(function (key) {
 
     var funcName = key.split('_').map(function (word, i) {
@@ -23430,8 +23431,10 @@ var APPID = 'da06cf8106afb34ae1142a4beb9ed1aa';
 var LS_PREFIX = 'cities-';
 var OPENWEATHER_URL = 'http://api.openweathermap.org/data/2.5/weather';
 
-var API = module.exports = {
+//API fetches city wheather from openweathermap.org and populates to localStorage.
+//For simplicity suppose that app will work in the new browsers where localStorage is available.
 
+var API = module.exports = {
     fetchCities: function() {
         var cities = [];
         if (localStorage.length) {
@@ -23443,6 +23446,7 @@ var API = module.exports = {
         }
         Actions.gotCities(cities);
     },
+
     addCity: function(cityName) {
         if (cityName === '') return;
         _get(OPENWEATHER_URL + '?q=' + cityName
@@ -23451,6 +23455,7 @@ var API = module.exports = {
                 _addCity(data);
             });
     },
+
     addCityByGeoCoord: function(lat, lon) {
         _get(OPENWEATHER_URL + '?lat=' + lat
             + '&lon=' + lon
@@ -23459,6 +23464,7 @@ var API = module.exports = {
                 _addCity(data);
             });
     },
+
     removeCity: function(city) {
        localStorage.removeItem(LS_PREFIX + city.id);
        setTimeout(Actions.deletedCity.bind(null,city), 0);
@@ -23466,6 +23472,7 @@ var API = module.exports = {
 };
 
 function _get(url) {
+    //Use new fetch method for AJAX calls. Doesn't work in IE, Safari.
     return fetch(url).then(function (res) {
         return res.json();
     });
@@ -23556,8 +23563,8 @@ var CityInput= React.createClass({displayName: "CityInput",
             value: ''
         };
     },
-    render: function () {
 
+    render: function () {
         return (
             React.createElement("form", {className: "row city-input"}, 
                 React.createElement("div", {className: "eight columns"}, 
@@ -23578,11 +23585,13 @@ var CityInput= React.createClass({displayName: "CityInput",
                 )
             ));
     },
+
     handleChange: function (event) {
         this.setState({
             value: event.target.value
         });
     },
+
     handleClick: function (event) {
         event.preventDefault();
         this.props.onClick(this.state.value);
@@ -23606,7 +23615,6 @@ var CityList = React.createClass({displayName: "CityList",
     },
 
     render: function() {
-
         var createCityRow = function(city) {
 
             return (React.createElement("li", {key: city.id, className: "row city-row"}, 
@@ -23640,13 +23648,10 @@ var CityList = React.createClass({displayName: "CityList",
         event.preventDefault();
         CityActions.deleteCity(city);
     }
-
 });
 
 function _convertToCelsius(degK) {
-
     return Math.round(degK - 273.15);
-
 }
 
 module.exports = CityList;
@@ -23774,7 +23779,6 @@ var API = require('./api/api');
 API.fetchCities();
 geoFindMe();
 
-
 Router.run(routes, function(Handler) {
     React.render(React.createElement(Handler, null), document.getElementById('app'));
 });
@@ -23819,6 +23823,7 @@ module.exports = routes;
 
 var ActionTypes = require('../constants/actionTypes');
 
+//Extend general store and bind actions with store methods.
 var CityStore = require('./store').extend({
     init: function () {
         this.bind(ActionTypes.GOT_CITIES, this.set);
@@ -23835,6 +23840,7 @@ var assign = require('object-assign');
 var EventEmitter = require('events').EventEmitter;
 var CHANGE_EVENT = 'change';
 
+//General store, that should be extended to particular store.
 var storeMethods = {
     init: function() {},
     set: function(items) {
@@ -23872,6 +23878,7 @@ var storeMethods = {
     emitChange: function() {
         this.emit(CHANGE_EVENT);
     },
+    //Each action can be served by several functions.
     bind: function(actionType, actionFn) {
         if (this.actions[actionType]) {
             this.actions[actionType].push(actionFn);
@@ -23900,6 +23907,7 @@ exports.extend = function(methods) {
     store.init();
 
     require('../dispatcher').register(function(action) {
+        //Each action can be served by several functions.
         if (store.actions[action.actionType]) {
             store.actions[action.actionType].forEach(function (fn) {
                 fn.call(store, action.data);
