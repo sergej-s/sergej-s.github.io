@@ -227,6 +227,7 @@
 	        );
 	    },
 
+	    //Change state (columns count) in accordance to window size
 	    handleResize: function handleResize(e) {
 	        var newColumnsCount = this.getColumnsCount();
 	        if (this.state.columnsCount !== newColumnsCount) {
