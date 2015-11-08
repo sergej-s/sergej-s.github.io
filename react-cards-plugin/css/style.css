@@ -1,0 +1,87 @@
+.border {
+    outline: 1px solid blue;
+}
+
+.column, .columns {
+    /*outline: 1px solid red;*/
+}
+
+html {
+    font-size: 10px;
+    line-height: normal;
+    font-family: 'Raleway', sans-serif;
+}
+
+body {
+    background: url('../img/background.png');
+    background-size: 1920px;
+}
+
+.cards li {
+    list-style: none;
+}
+
+.card-caption {
+    background-color: rgba(80, 80, 80, 0.7);
+    padding: 5px 0 0 5px;
+    height: 38px;
+    line-height: 0.9rem;
+}
+
+.card-caption img {
+    margin-right: 5px;
+    float: left;
+    position: relative;
+    top: -10px;
+}
+
+.card-header {
+    font-size: 2.0rem !important;
+    margin: 0;
+}
+
+.card-description {
+    font-size: 1.2rem !important;
+    margin: 0;
+}
+
+.card-overlay {
+    background-color: rgba(80, 80, 80, 0.8);
+    font-size: 2rem !important;
+}
+
+.card-overlay a {
+    cursor: pointer;
+    text-decoration: none;
+    color: #EBE8E6;
+}
+
+.cards-column {
+    padding: 10px;
+    background-color: #717171;
+    width: 220px;
+    margin: auto;
+}
+
+/* Larger than mobile */
+@media (min-width: 400px) {}
+
+/* Larger than phablet (also point when grid becomes active) */
+@media (min-width: 550px) {}
+
+/* Larger than tablet */
+@media (min-width: 750px) {
+    .container {
+        width: 480px;
+    }
+}
+
+/* Larger than desktop */
+@media (min-width: 1000px) {}
+
+/* Larger than Desktop HD */
+@media (min-width: 1200px) {
+    .container {
+        width: 1020px;
+    }
+}
