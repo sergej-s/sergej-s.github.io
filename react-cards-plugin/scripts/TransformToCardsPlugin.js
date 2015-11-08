@@ -262,6 +262,7 @@
 	        mouseOverHandler: React.PropTypes.func.isRequired
 	    },
 
+	    //State is changed on mouse over
 	    getInitialState: function getInitialState() {
 	        return { isOverlayed: false };
 	    },
