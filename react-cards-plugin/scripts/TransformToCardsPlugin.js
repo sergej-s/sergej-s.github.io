@@ -340,13 +340,10 @@
 	        );
 	    },
 
-	    // <svg dangerouslySetInnerHTML={{__html: this.props.data.icon}}></svg>
-
 	    mouseOverHandler: function mouseOverHandler(event) {
 	        event.preventDefault();
 	        if (this.state.isOverlayed === false) {
 	            this.setState({ isOverlayed: true });
-	            console.log('mouse enter');
 	        }
 	    },
 
@@ -354,7 +351,6 @@
 	        event.preventDefault();
 	        if (this.state.isOverlayed === true) {
 	            this.setState({ isOverlayed: false });
-	            console.log('mouse leave');
 	        }
 	    }
 	});
