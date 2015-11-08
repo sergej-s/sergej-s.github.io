@@ -154,10 +154,20 @@
 </div>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="//fb.me/react-0.13.3.min.js"></script>
-<script src="scripts/TransformToCardsPlugin.js"></script>
+<script src="scripts/transformToCardsPlugin.js"></script>
 <script>
     $(window).load(function(){
-        $("#cards").transformToCards();
+        $("#cards").transformToCards({
+            widths: {
+                bigScreen: 1200,
+                middleScreen: 750
+            },
+            cssClasses: {
+                bigScreen: 'three columns',
+                middleScreen: 'six columns',
+                container: 'row'
+            }
+        });
     })
 </script>
 </body>

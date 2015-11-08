@@ -13,7 +13,7 @@ html {
 }
 
 body {
-    background: url('../img/background.png');
+    background: url('../../img/background.png');
     background-size: 1920px;
 }
 
@@ -71,7 +71,7 @@ body {
 
 /* Larger than tablet */
 @media (min-width: 750px) {
-    .container {
+    #cards {
         width: 480px;
     }
 }
@@ -81,7 +81,7 @@ body {
 
 /* Larger than Desktop HD */
 @media (min-width: 1200px) {
-    .container {
+    #cards {
         width: 1020px;
     }
 }

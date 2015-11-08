@@ -51,6 +51,8 @@
 
 	if (typeof jQuery !== 'undefined') {
 	    (function ($) {
+	        //Create jQuery plugin
+
 	        var pluginName = "transformToCards",
 	            defaults = {};
 
@@ -65,7 +67,9 @@
 	        $.extend(Plugin.prototype, {
 	            init: function init() {
 	                var data = [];
-	                console.log(this.element);
+
+	                //Interate over all li elements and populate data object with
+	                //card's information
 	                $(this.element).find('li').each(function (ind) {
 	                    var card = $(this),
 	                        $icon = $(card.find('img')[0]),
@@ -86,7 +90,10 @@
 	                    };
 	                    data.push(cardData);
 	                });
-	                this.component = React.render(React.createElement(Cards, { cardsData: data }), this.element);
+
+	                //Render react cards component with collected data and
+	                //predetermined settings
+	                this.component = React.render(React.createElement(Cards, { cardsData: data, settings: this.settings }), this.element);
 	                return this;
 	            }
 	        });
@@ -121,30 +128,33 @@
 	    displayName: 'Cards',
 
 	    propTypes: {
-	        cardsData: React.PropTypes.array.isRequired
+	        cardsData: React.PropTypes.array.isRequired,
+	        settings: React.PropTypes.object.isRequired
 	    },
 
+	    //Obtain count of cards columns depending on window width
 	    getColumnsCount: function getColumnsCount() {
-	        var windowWidth = window.innerWidth;
+	        var windowWidth = window.innerWidth,
+	            widths = this.props.settings.widths;
 
-	        if (windowWidth >= 1200) {
+	        if (windowWidth >= widths.bigScreen) {
 	            return 4;
-	        } else if (windowWidth < 1200 && windowWidth >= 750) {
+	        } else if (windowWidth < widths.bigScreen && windowWidth >= widths.middleScreen) {
 	            return 2;
 	        } else {
 	            return 1;
 	        }
 	    },
 
+	    //State is changed on window resize
 	    getInitialState: function getInitialState() {
 	        return { columnsCount: this.getColumnsCount() };
 	    },
 
 	    render: function render() {
 	        var cardsData = this.props.cardsData,
-	            windowWidth = this.state.windowWidth,
-	            self = this,
-	            cardsDataLength = cardsData.length;
+	            cardsDataLength = cardsData.length,
+	            cssClasses = this.props.settings.cssClasses;
 
 	        function generateCardsList(cardsData) {
 	            return React.createElement(
@@ -155,14 +165,15 @@
 	                        'li',
 	                        null,
 	                        React.createElement(Card, { key: cardData.id,
-	                            data: cardData,
-	                            mouseOverHandler: self.mouseOverHandler
+	                            data: cardData
 	                        })
 	                    );
 	                })
 	            );
 	        }
 
+	        //Split initial array of cards into columns depending on window size.
+	        //It is necessary to keep first cards from array at a top of the columns.
 	        switch (this.state.columnsCount) {
 	            case 4:
 	                var cardsColumns = [[], [], [], []],
@@ -191,20 +202,21 @@
 
 	        }
 
+	        //Add css framework classes to handle columns styles
 	        var cssColumnsClass = '';
 	        switch (cardsColumns.length) {
 	            case 4:
-	                cssColumnsClass = 'three columns';
+	                cssColumnsClass = cssClasses.bigScreen;
 	                break;
 	            case 2:
-	                cssColumnsClass = 'six columns';
+	                cssColumnsClass = cssClasses.middleScreen;
 	                break;
 	            default:
 	        }
 
 	        return React.createElement(
 	            'div',
-	            { className: 'row cards' },
+	            { className: cssClasses.container + ' cards' },
 	            cardsColumns.map(function (cardsColumn) {
 	                return React.createElement(
 	                    'div',
@@ -215,15 +227,9 @@
 	        );
 	    },
 
-	    mouseOverHandler: function mouseOverHandler(event, opts) {
-	        event.preventDefault();
-	        console.log(opts);
-	    },
-
 	    handleResize: function handleResize(e) {
 	        var newColumnsCount = this.getColumnsCount();
 	        if (this.state.columnsCount !== newColumnsCount) {
-	            console.log('state ' + this.state.columnsCount);
 	            this.setState({ columnsCount: newColumnsCount });
 	        }
 	    },
@@ -260,21 +266,22 @@
 	    },
 
 	    render: function render() {
-	        var cardStyle = {
-	            background: 'url(' + this.props.data.img.src + ') no-repeat',
-	            backgroundSize: this.props.data.width,
-	            color: this.props.data.img.color,
-	            height: this.props.data.img.height,
+	        var data = this.props.data,
+	            cardStyle = {
+	            background: 'url(' + data.img.src + ') no-repeat',
+	            backgroundSize: data.width,
+	            color: data.img.color,
+	            height: data.img.height,
 	            position: 'relative'
 	        },
 	            overlayStyle = {
-	            height: this.props.data.img.height,
+	            height: data.img.height,
 	            width: '100%',
 	            top: 0,
 	            position: 'absolute'
 	        };
 
-	        // <circle cx="20" cy="20" r="20" fill="rgb(234,234,234)" stroke-width="1" stroke="rgb(0,0,0)"/>
+	        //Add overlay on mouse over
 	        var overlay = '';
 	        if (this.state.isOverlayed) {
 	            overlay = React.createElement(
@@ -324,16 +331,16 @@
 	            React.createElement(
 	                'div',
 	                { className: 'card-caption' },
-	                React.createElement('img', { src: this.props.data.icon }),
+	                React.createElement('img', { src: data.icon }),
 	                React.createElement(
 	                    'h1',
 	                    { className: 'card-header' },
-	                    this.props.data.title
+	                    data.title
 	                ),
 	                React.createElement(
 	                    'p',
 	                    { className: 'card-description' },
-	                    this.props.data.description
+	                    data.description
 	                )
 	            ),
 	            overlay
